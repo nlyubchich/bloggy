@@ -11,6 +11,9 @@ extern crate serde_derive;
 extern crate maplit;
 
 extern crate rustc_serialize;
+
+use std::io::prelude::*;
+use std::fs::File;
 use rustc_serialize::json::{ToJson};
 use std::collections::BTreeMap;
 
@@ -24,12 +27,12 @@ use handlebars_iron::Template;
 
 fn hello_world(_: &mut Request) -> IronResult<Response> {
     let mut resp = Response::new();
+    let mut f = File::open("./content/articles/hello_world.md").unwrap();
+    let mut article = String::new();
+    f.read_to_string(&mut article).unwrap();
+
     let mut data = BTreeMap::new();
-    let html = markdown::to_html("\
-    __I am markdown__
-    rust
-    extern crate markdown;
-    use iron::prelude::*");
+    let html = markdown::to_html(article.as_str());
     data.insert("parent".to_string(), "base".to_json());
     data.insert("title".to_string(), "Sunny Blog".to_json());
     data.insert("content".to_string(), html.to_json());
@@ -69,7 +72,7 @@ fn main() {
     chain.link_after(printer);
 
     let mut hbse = HandlebarsEngine::new();
-    hbse.add(Box::new(DirectorySource::new("./templates/", ".hbs")));
+    hbse.add(Box::new(DirectorySource::new("./content/templates/", ".hbs")));
 
     // load templates from all registered sources
     if let Err(r) = hbse.reload() {
