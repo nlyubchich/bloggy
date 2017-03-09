@@ -9,12 +9,12 @@ handlebars-iron ="0.23.*"
 staticfile = "0.4.0"
 router = "0.5.1"
 mount = "0.3.0"
-rustc-serialize = "0.3.22"
-maplit = "0.1.4"
 serde_derive = "0.9.9"
 markdown = "0.2.0"
 time = "0.1"
+toml = "0.3"
+serde = "0.9.1"
 
 [features]
 watch = ["handlebars-iron/watch"]
-# default = ["handlebars-iron/serde_type"]
+default = ["handlebars-iron/serde_type"]
